@@ -1,6 +1,6 @@
 import { clientPromise } from '@/lib/mongodb';
 import Link from 'next/link';
-import styles from '@/app/HomePage.module.css';
+import styles from './LocationHospitals.module.css';
 import { Metadata } from 'next';
 
 interface Props {
@@ -41,16 +41,16 @@ export default async function LocationHospitalsPage({ params }: Props) {
   }
 
   return (
-    <div className={`${styles.container} ${styles.locationHospitalsContainer}`}>
-      <h1 className={styles.locationHospitalsTitle}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>
         All Hospital List at {location} — Find Doctors & Visiting Info
       </h1>
-      <p className={styles.locationHospitalsIntro}>
+      <p className={styles.intro}>
         If you're searching for the best hospitals in {location}, you're in the right place.<br />
         This page offers a complete list of hospitals located in and around {location}, along with links to their doctor profiles, specialties, chamber times, and appointment details. Whether you're looking for a general physician, specialist, or diagnostic center — find the right care below.
       </p>
-      <h2 className={styles.locationHospitalsH2}>
-        Hospitals in {location}
+      <h2 className={styles.sectionTitle}>
+        Best Hospitals and Diagnostic center in {location}
       </h2>
       <ul className={styles.hospitalList}>
         {hospitals.map(hospital => {

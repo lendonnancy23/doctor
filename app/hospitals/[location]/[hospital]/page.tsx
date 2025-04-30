@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { clientPromise } from '@/lib/mongodb';
 import Link from 'next/link';
 import SchemaOrg from '@/components/SchemaOrg';
-import styles from '@/app/HomePage.module.css';
-import { formatDoctorNameForUrl } from '@/lib/utils';
+import styles from './HospitalPage.module.css';
+import { slugify } from '@/lib/utils';
 
 interface Props {
   params: { location: string; hospital: string };
@@ -120,7 +120,7 @@ export default async function HospitalDoctorListPage({ params }: Props) {
           <ul className={styles.otherHospitalsListPills}>
             {relatedHospitals.map(h => (
               <li key={h}>
-                <Link href={`/hospitals/${encodeURIComponent(location)}/${formatDoctorNameForUrl(h)}`}>{h}</Link>
+                <Link href={`/hospitals/${encodeURIComponent(location)}/${slugify(h)}`}>{h}</Link>
               </li>
             ))}
           </ul>

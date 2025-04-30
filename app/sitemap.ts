@@ -54,16 +54,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ];
 
-  // Specialty pages will be added when implemented
-  const specialtyUrls: MetadataRoute.Sitemap = [];
-
-  // Location pages will be added when implemented
-  const locationUrls: MetadataRoute.Sitemap = [];
+  // Specialty/location pages
+  const specialtyPages = [];
+  // Get all unique locations and specialties
+  const locations = await db.collection('doctor_info').distinct('Location');
+  for (const location of locations) {
+    const specialties = await db.collection('doctor_info').distinct('Speciality', { Location: location });
+    for (const specialty of specialties) {
+      const slug = specialty.toLowerCase().replace(/\s+/g, '-');
+      specialtyPages.push({
+        url: `${baseUrl}/specialists/${encodeURIComponent(location)}/best-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7
+      });
+    }
+  }
 
   return [
     ...staticPages,
     ...doctorUrls,
-    ...specialtyUrls,
-    ...locationUrls
+    ...specialtyPages
   ];
 }

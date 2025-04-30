@@ -135,6 +135,46 @@
   background: #2563eb;
   color: #fff;
 }
+.quickSpecialtyNavSection {
+  margin: 3rem 0 2rem 0;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(120deg, #f0f7ff 60%, #e0e7ff 100%);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(14,165,233,0.07);
+}
+
+.quickSpecialtyNavTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.quickSpecialtyNavGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: center;
+}
+
+.quickSpecialtyNavLink {
+  background: #fff;
+  color: #0ea5e9;
+  border-radius: 2rem;
+  padding: 0.75rem 1.75rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.06);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  border: 1px solid #e0e7ef;
+}
+.quickSpecialtyNavLink:hover {
+  background: #e0e7ff;
+  color: #6366f1;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.10);
+}
 @media (max-width: 900px) {
   .locationHospitalsContainer {
     padding: 1.2rem 0.5rem;

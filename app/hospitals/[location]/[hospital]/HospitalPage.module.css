@@ -1,0 +1,238 @@
+.hospitalDoctorListContainer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1rem 4rem 1rem;
+}
+
+.hospitalDoctorListTitle {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(to right, #0ea5e9, #6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.hospitalDoctorListIntro {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-bottom: 2.2rem;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.hospitalDoctorListH2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.doctorCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2.5rem;
+}
+
+.doctorCard {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  transition: box-shadow 0.2s, transform 0.2s;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.doctorCard:hover {
+  box-shadow: 0 8px 32px rgba(14,165,233,0.12);
+  transform: translateY(-4px) scale(1.01);
+}
+
+.doctorCardContent {
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.doctorCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.doctorName {
+  font-weight: 700;
+  color: #0ea5e9;
+  font-size: 1.15rem;
+}
+
+.doctorSpecialty {
+  color: #334155;
+  font-size: 1.01rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.specialtyIcon {
+  font-size: 1.1rem;
+}
+
+.doctorDegree {
+  color: #64748b;
+  font-size: 0.98rem;
+}
+
+.doctorVisiting {
+  color: #64748b;
+  font-size: 0.97rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.visitingIcon {
+  font-size: 1.1rem;
+}
+
+.doctorAppointment {
+  color: #0ea5e9;
+  font-size: 0.97rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.phoneIcon {
+  font-size: 1.1rem;
+}
+
+.doctorProfileLink {
+  color: #6366f1;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  font-size: 0.97rem;
+  transition: color 0.2s;
+}
+.doctorProfileLink:hover {
+  color: #0ea5e9;
+  text-decoration: underline;
+}
+
+.faqSectionCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 2.5rem 0 2rem 0;
+}
+
+.faqCard {
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.04);
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.faqQ {
+  font-weight: 600;
+  color: #0ea5e9;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.faqIcon {
+  font-size: 1.2rem;
+}
+
+.faqA {
+  color: #334155;
+  font-size: 1rem;
+}
+
+.otherHospitalsSectionCard {
+  background: #f0f9ff;
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
+  margin-top: 2.5rem;
+  box-shadow: 0 2px 12px rgba(14,165,233,0.07);
+}
+
+.otherHospitalsTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 1rem;
+}
+
+.otherHospitalsListPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.otherHospitalsListPills li {
+  background: #fff;
+  border-radius: 2rem;
+  padding: 0.5rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(14,165,233,0.04);
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.otherHospitalsListPills a {
+  color: #0ea5e9;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.otherHospitalsListPills a:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.errorContainer {
+  max-width: 600px;
+  margin: 4rem auto;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: #b91c1c;
+}
+
+@media (max-width: 700px) {
+  .hospitalDoctorListContainer {
+    padding: 1.5rem 0.5rem;
+  }
+  .doctorCardContent {
+    padding: 1.25rem 0.75rem 1rem 0.75rem;
+  }
+  .hospitalDoctorListTitle {
+    font-size: 1.5rem;
+  }
+  .hospitalDoctorListH2 {
+    font-size: 1.05rem;
+  }
+  .faqCard {
+    padding: 1rem 0.75rem;
+  }
+  .otherHospitalsSectionCard {
+    padding: 1.25rem 0.75rem;
+  }
+}

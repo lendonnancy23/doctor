@@ -9,6 +9,8 @@ import dynamic from 'next/dynamic';
 import { useInView } from 'react-intersection-observer';
 import type { SearchFilters } from './SearchBar';
 import SchemaOrg from './SchemaOrg';
+import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 
 const Doctor = dynamic(() => import('./Doctor'), {
   loading: () => <Loading />,
@@ -191,6 +193,27 @@ export default function HomePageContent() {
     ]
   };
 
+  // Add a section for quick specialty/location navigation
+  const [specialtyLinks, setSpecialtyLinks] = useState<{ location: string, specialty: string }[]>([]);
+  useEffect(() => {
+    // Fetch unique locations and specialties for navigation
+    Promise.all([
+      fetch('/api/doctors?locations=true').then(res => res.json()),
+      fetch('/api/doctors?specialties=true').then(res => res.json())
+    ]).then(([locationsData, specialtiesData]) => {
+      const locations = locationsData.locations || [];
+      const specialties = specialtiesData.specialties || [];
+      // Only show a few combinations for homepage navigation
+      const links = [];
+      for (let i = 0; i < Math.min(locations.length, 3); i++) {
+        for (let j = 0; j < Math.min(specialties.length, 3); j++) {
+          links.push({ location: locations[i], specialty: specialties[j] });
+        }
+      }
+      setSpecialtyLinks(links);
+    });
+  }, []);
+
   return (
     <>
       <SchemaOrg doctors={displayedDoctors} />
@@ -282,6 +305,21 @@ export default function HomePageContent() {
             </>
           )}
         </div>
+
+        <section className={styles.quickSpecialtyNavSection}>
+          <h2 className={styles.quickSpecialtyNavTitle}>Find Top Doctors by Specialty & Location</h2>
+          <div className={styles.quickSpecialtyNavGrid}>
+            {specialtyLinks.map(({ location, specialty }) => (
+              <Link
+                key={`${location}-${specialty}`}
+                href={`/specialists/${encodeURIComponent(location)}/best-${slugify(specialty)}`}
+                className={styles.quickSpecialtyNavLink}
+              >
+                Best {specialty} in {location}
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
     </>
   );

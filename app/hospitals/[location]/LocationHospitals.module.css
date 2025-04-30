@@ -1,0 +1,171 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1rem 4rem 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #0ea5e9, #6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.intro {
+  color: #64748b;
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.hospitalList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+}
+
+.hospitalCard {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  transition: box-shadow 0.2s, transform 0.2s;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.hospitalCard:hover {
+  box-shadow: 0 8px 32px rgba(14,165,233,0.12);
+  transform: translateY(-4px) scale(1.01);
+}
+
+.hospitalCardContent {
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+}
+
+.hospitalName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.hospitalDoctorsLink {
+  color: #0ea5e9;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  display: inline-block;
+  transition: color 0.2s;
+}
+.hospitalDoctorsLink:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.doctorPreviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.doctorPreviewCard {
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-left: 4px solid #0ea5e9;
+}
+
+.doctorName {
+  font-weight: 600;
+  color: #0ea5e9;
+  font-size: 1.1rem;
+}
+
+.doctorSpecialty {
+  color: #334155;
+  font-size: 0.98rem;
+}
+
+.doctorVisiting {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.doctorAppointment {
+  color: #0ea5e9;
+  font-size: 0.95rem;
+}
+
+.doctorProfileLink {
+  color: #6366f1;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  font-size: 0.97rem;
+  transition: color 0.2s;
+}
+.doctorProfileLink:hover {
+  color: #0ea5e9;
+  text-decoration: underline;
+}
+
+.moreDoctorsLink {
+  margin-top: 1rem;
+}
+.moreDoctorsLink a {
+  color: #0ea5e9;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.moreDoctorsLink a:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.errorContainer {
+  max-width: 600px;
+  margin: 4rem auto;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: #b91c1c;
+}
+
+@media (max-width: 700px) {
+  .container {
+    padding: 1.5rem 0.5rem;
+  }
+  .hospitalCardContent {
+    padding: 1.25rem 0.75rem 1rem 0.75rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .sectionTitle {
+    font-size: 1.15rem;
+  }
+}
