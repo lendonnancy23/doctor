@@ -1,0 +1,229 @@
+.heroSection {
+  background: linear-gradient(150deg, #ffffff 50%, #f0f7ff 100%);
+  min-height: 600px; /* Reduced from 90vh */
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1rem;
+}
+
+.heroContent {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+}
+
+.leftContent {
+  position: relative;
+  padding-right: 2rem;
+}
+
+.crossIcon {
+  position: absolute;
+  top: -40px;
+  right: 20%;
+  font-size: 4rem;
+  color: #0ea5e9;
+  font-weight: 300;
+  opacity: 0.5;
+  transform: rotate(15deg);
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+.searchContainer {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
+}
+
+.features {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.checkIcon {
+  color: #0ea5e9;
+  background: rgba(14, 165, 233, 0.1);
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.rightContent {
+  position: relative;
+}
+
+.imageWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  max-height: 500px; /* Added max-height */
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  max-width: 450px; /* Reduced from 600px */
+  object-fit: contain;
+  z-index: 1;
+}
+
+.doctorCard {
+  position: absolute;
+  right: 0;
+  bottom: 10%;
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 2;
+  animation: slideIn 0.5s ease-out;
+}
+
+.doctorAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.doctorInfo {
+  flex: 1;
+}
+
+.doctorInfo h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.doctorInfo p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.bookNowBtn {
+  background: #0ea5e9;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bookNowBtn:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 2.75rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1.125rem;
+  }
+
+  .heroImage {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    min-height: auto;
+    padding: 3rem 1rem;
+  }
+
+  .heroContent {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .leftContent {
+    padding-right: 0;
+    order: 2;
+  }
+
+  .crossIcon {
+    display: none;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .features {
+    justify-content: center;
+  }
+
+  .rightContent {
+    order: 1;
+    margin-bottom: 2rem;
+  }
+
+  .heroImage {
+    max-width: 320px;
+  }
+
+  .doctorCard {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 300px;
+  }
+}

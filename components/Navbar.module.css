@@ -1,0 +1,276 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 2rem;
+}
+
+.navContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logoText {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo:hover {
+  transform: translateY(-1px);
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLinks a {
+  color: var(--gray-700);
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.navLinks a:hover {
+  color: var(--primary);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.navLinks a.active {
+  color: var(--primary);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.findButton, .appointmentButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.findButton {
+  background: rgba(37, 99, 235, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+.appointmentButton {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+.findButton:hover, .appointmentButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.searchIcon, .doctorIcon {
+  font-size: 1.1rem;
+}
+
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .menuButton {
+    display: block;
+  }
+
+  .navLinks {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1rem);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .navLinks.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .navLinks a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .findButton, .appointmentButton {
+    justify-content: center;
+  }
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownButton {
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdownButton:hover,
+.dropdownButton[aria-expanded="true"] {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+}
+
+.dropdownMenu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 110%;
+  min-width: 220px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-radius: 0.75rem;
+  z-index: 1001;
+  padding: 0.5rem 0;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.dropdown:hover .dropdownMenu,
+.dropdown:focus-within .dropdownMenu {
+  display: block;
+}
+
+.dropdownItem {
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  color: var(--gray-700);
+  font-weight: 500;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus {
+  background: rgba(37, 99, 235, 0.06);
+  color: var(--primary);
+}
+
+.submenu {
+  display: block;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 220px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-radius: 0.75rem;
+  z-index: 1002;
+  padding: 0.5rem 0;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.submenuItem {
+  display: block;
+  padding: 0.5rem 1.25rem;
+  color: var(--gray-700);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.submenuItem:hover,
+.submenuItem:focus {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+  .dropdownMenu, .submenu {
+    min-width: 180px;
+    font-size: 0.97rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    width: 100%;
+  }
+  .dropdownMenu {
+    position: static;
+    box-shadow: none;
+    border-radius: 0.5rem;
+    max-height: 220px;
+    width: 100%;
+  }
+  .dropdownItem {
+    padding: 0.5rem 0.75rem;
+  }
+  .submenu {
+    position: static;
+    box-shadow: none;
+    border-radius: 0.5rem;
+    max-height: 220px;
+    width: 100%;
+    left: 0;
+    top: 0;
+  }
+  .submenuItem {
+    padding: 0.5rem 0.75rem;
+  }
+}

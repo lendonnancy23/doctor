@@ -1,0 +1,180 @@
+.locationHospitalsContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.2rem 3rem 1.2rem;
+  background: #f6faff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(37,99,235,0.04);
+}
+.locationHospitalsTitle {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 1.3rem;
+  text-align: center;
+  color: #1e293b;
+  letter-spacing: -1px;
+}
+.locationHospitalsIntro {
+  margin-bottom: 2.7rem;
+  font-size: 1.13rem;
+  color: #334155;
+  text-align: center;
+  line-height: 1.7;
+}
+.locationHospitalsH2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 2.2rem;
+  color: #2563eb;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+.doctorCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 2rem 1.5rem;
+  margin-bottom: 2.5rem;
+  padding: 0;
+  list-style: none;
+}
+.doctorCard {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(37,99,235,0.07);
+  border: 1.5px solid #e0e7ef;
+  padding: 1.3rem 1.2rem 1.1rem 1.2rem;
+  transition: box-shadow 0.2s, border 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.doctorCard:hover {
+  box-shadow: 0 6px 24px rgba(37,99,235,0.13);
+  border: 1.5px solid #2563eb33;
+}
+.doctorCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.doctorCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+.specialtyIcon, .visitingIcon, .phoneIcon, .faqIcon {
+  margin-right: 0.3em;
+  font-size: 1.1em;
+  vertical-align: middle;
+}
+.faqSectionCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.faqCard {
+  background: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.04);
+  padding: 1.2rem 1rem;
+  min-width: 220px;
+  flex: 1 1 260px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1.5px solid #e0e7ef;
+}
+.faqQ {
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 0.2rem;
+  font-size: 1.05rem;
+}
+.faqA {
+  color: #334155;
+  font-size: 0.98rem;
+}
+.otherHospitalsSectionCard {
+  background: #f1f5f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.04);
+  padding: 1.2rem 1rem;
+  margin-top: 2.5rem;
+}
+.otherHospitalsTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 0.7rem;
+}
+.otherHospitalsListPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.otherHospitalsListPills li a {
+  background: #e0e7ef;
+  color: #2563eb;
+  border-radius: 999px;
+  padding: 0.4em 1em;
+  font-weight: 500;
+  font-size: 1.01rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  display: inline-block;
+}
+.otherHospitalsListPills li a:hover {
+  background: #2563eb;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .locationHospitalsContainer {
+    padding: 1.2rem 0.5rem;
+  }
+  .doctorCardGrid {
+    gap: 1.2rem 0.7rem;
+  }
+  .faqSectionCards {
+    gap: 0.7rem;
+  }
+}
+@media (max-width: 600px) {
+  .locationHospitalsTitle {
+    font-size: 1.3rem;
+  }
+  .locationHospitalsH2 {
+    font-size: 1.05rem;
+  }
+  .locationHospitalsContainer {
+    padding: 1rem 0.2rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .doctorCardGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .doctorCard {
+    padding: 1rem 0.7rem;
+  }
+  .faqSectionCards {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .faqCard {
+    min-width: 0;
+    max-width: 100%;
+    padding: 1rem 0.7rem;
+  }
+  .otherHospitalsSectionCard {
+    padding: 1rem 0.7rem;
+  }
+}

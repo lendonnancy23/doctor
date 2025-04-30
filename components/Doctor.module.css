@@ -1,0 +1,148 @@
+.imageContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 1rem;
+  background-color: var(--gray-50);
+  overflow: hidden;
+}
+
+.doctorContainer {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.doctorHeader {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.doctorImageWrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  position: relative;
+  margin: 0 auto;
+}
+
+.doctorImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.doctorInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.doctorName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  text-align: center;
+  max-width: 100%;
+}
+
+.doctorSpecialty {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.hospitalName {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.location {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.viewProfileButton {
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.doctorContainer:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.doctorContainer:hover .doctorImage {
+  transform: scale(1.05);
+}
+
+.doctorContainer:hover .viewProfileButton {
+  background: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .doctorContainer {
+    max-width: 280px;
+  }
+
+  .doctorImageWrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .doctorHeader {
+    padding: 1.25rem;
+  }
+
+  .doctorName {
+    font-size: 1.125rem;
+  }
+
+  .doctorSpecialty {
+    font-size: 0.875rem;
+  }
+
+  .hospitalName {
+    font-size: 0.75rem;
+  }
+
+  .location {
+    font-size: 0.75rem;
+  }
+}
