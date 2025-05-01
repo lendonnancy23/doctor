@@ -195,24 +195,14 @@ export default function HomePageContent() {
   };
 
   // Add a section for quick specialty/location navigation
-  const [specialtyLinks, setSpecialtyLinks] = useState<{ location: string, specialty: string }[]>([]);
+  const [specialtyLinks, setSpecialtyLinks] = useState<{ location: string, speciality: string, slugifiedSpeciality: string, count: number }[]>([]);
   useEffect(() => {
-    // Fetch unique locations and specialties for navigation
-    Promise.all([
-      fetch('/api/doctors?locations=true').then(res => res.json()),
-      fetch('/api/doctors?specialties=true').then(res => res.json())
-    ]).then(([locationsData, specialtiesData]) => {
-      const locations = locationsData.locations || [];
-      const specialties = specialtiesData.specialties || [];
-      // Only show a few combinations for homepage navigation
-      const links = [];
-      for (let i = 0; i < Math.min(locations.length, 3); i++) {
-        for (let j = 0; j < Math.min(specialties.length, 3); j++) {
-          links.push({ location: locations[i], specialty: specialties[j] });
-        }
-      }
-      setSpecialtyLinks(links);
-    });
+    // Fetch only valid (location, Speciality) pairs from the backend
+    fetch('/api/doctors?uniqueLocationSpecialityPairs=true')
+      .then(res => res.json())
+      .then(data => {
+        setSpecialtyLinks(data.pairs || []);
+      });
   }, []);
 
   return (
@@ -310,13 +300,13 @@ export default function HomePageContent() {
         <section className={styles.quickSpecialtyNavSection}>
           <h2 className={styles.quickSpecialtyNavTitle}>Find Top Doctors by Specialty & Location</h2>
           <div className={styles.quickSpecialtyNavGrid}>
-            {specialtyLinks.map(({ location, specialty }) => (
+            {specialtyLinks.filter(link => link.count > 0).map(({ location, speciality, slugifiedSpeciality, count }) => (
               <Link
-                key={`${location}-${specialty}`}
-                href={`/specialists/${encodeURIComponent(location)}/best-${slugify(specialty)}`}
+                key={`${location}-${speciality}`}
+                href={`/specialists/${encodeURIComponent(location)}/${slugifiedSpeciality}`}
                 className={styles.quickSpecialtyNavLink}
               >
-                Best {specialty} in {location}
+                Best {speciality} in {location} ({count})
               </Link>
             ))}
           </div>

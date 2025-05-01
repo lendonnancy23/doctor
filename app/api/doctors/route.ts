@@ -56,6 +56,25 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    if (searchParams.get('uniqueLocationSpecialityPairs')) {
+      // For each (location, Speciality) pair, count doctors and return only pairs with count > 0
+      const pairs = await db.collection('doctor_info').aggregate([
+        { $match: { Location: { $ne: null }, Speciality: { $ne: null } } },
+        { $group: { _id: { location: "$Location", speciality: "$Speciality" }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 0 } } },
+        { $project: { location: "$_id.location", speciality: "$_id.speciality", slugifiedSpeciality: "", count: 1, _id: 0 } }
+      ]).toArray();
+      // Add slugifiedSpeciality for each pair
+      const { slugify } = await import('@/lib/utils');
+      const flatPairs = pairs.map(pair => ({
+        location: pair.location,
+        speciality: pair.speciality,
+        slugifiedSpeciality: slugify(pair.speciality),
+        count: pair.count
+      }));
+      return NextResponse.json({ pairs: flatPairs }, { headers: corsHeaders });
+    }
+
     // Build query
     const query: any = {};
     if (name) {
