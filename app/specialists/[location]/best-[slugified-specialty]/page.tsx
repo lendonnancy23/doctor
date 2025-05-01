@@ -76,7 +76,7 @@ export default async function SpecialistPage({ params }: Props) {
               <div className={styles.doctorAddress}><b>Chamber Address:</b> {doc.Address}</div>
               <div className={styles.doctorVisiting}><b>Visiting Hours:</b> {doc["Visiting Hours"]}</div>
               <div className={styles.doctorAppointment}><b>Appointment Phone:</b> <a href={`tel:${doc["Appointment Number"]}`}>{doc["Appointment Number"]}</a></div>
-              <Link href={`/${encodeURIComponent(doc["Doctor Name"])}`} className={styles.doctorProfileLink}>View Full Profile ➝</Link>
+              <Link href={`/${doc.Slug}`} className={styles.doctorProfileLink}>View Full Profile ➝</Link>
             </div>
           </li>
         ))}

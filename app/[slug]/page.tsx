@@ -3,16 +3,16 @@ import DoctorPageClient from './DoctorPageClient';
 import { clientPromise } from '@/lib/mongodb';
 
 interface Props {
-  params: { doctorName: string }
+  params: { slug: string }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const decodedName = decodeURIComponent(params.doctorName);
+  const slug = decodeURIComponent(params.slug);
   
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB_NAME);
-    const doctor = await db.collection('doctor_info').findOne({ 'Doctor Name': decodedName });
+    const doctor = await db.collection('doctor_info').findOne({ Slug: slug });
 
     if (!doctor) {
       return {
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title,
         description,
-        url: `https://topdoctorlist.com/${encodeURIComponent(doctor['Doctor Name'])}`,
+        url: `https://topdoctorlist.com/${doctor['Slug']}`,
         siteName: 'TopDoctorList',
         images: [
           {
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         site: '@topdoctorlist'
       },
       alternates: {
-        canonical: `https://topdoctorlist.com/${encodeURIComponent(doctor['Doctor Name'])}`
+        canonical: `https://topdoctorlist.com/${doctor['Slug']}`
       }
     };
   } catch (error) {
@@ -79,12 +79,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DoctorPage({ params }: Props) {
-  const decodedName = decodeURIComponent(params.doctorName);
+  const slug = decodeURIComponent(params.slug);
   
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB_NAME);
-    const doctor = await db.collection('doctor_info').findOne({ 'Doctor Name': decodedName });
+    const doctor = await db.collection('doctor_info').findOne({ Slug: slug });
 
     if (!doctor) {
       return (
@@ -108,7 +108,8 @@ export default async function DoctorPage({ params }: Props) {
       Address: doctor.Address ?? "",
       Location: doctor.Location ?? "",
       "Visiting Hours": doctor["Visiting Hours"] ?? "",
-      "Appointment Number": doctor["Appointment Number"] ?? ""
+      "Appointment Number": doctor["Appointment Number"] ?? "",
+      Slug: doctor["Slug"] ?? ""
     };
     return <DoctorPageClient doctor={doctorData} />;
   } catch (error) {

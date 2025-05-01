@@ -57,7 +57,8 @@ export default async function HospitalDoctorListPage({ params }: Props) {
     Address: doc.Address ?? "",
     Location: doc.Location ?? "",
     "Visiting Hours": doc["Visiting Hours"] ?? "",
-    "Appointment Number": doc["Appointment Number"] ?? ""
+    "Appointment Number": doc["Appointment Number"] ?? "",
+    Slug: doc.Slug ?? ""
   }));
   if (!doctors.length) {
     return (
@@ -76,13 +77,13 @@ export default async function HospitalDoctorListPage({ params }: Props) {
   return (
     <div className={styles.hospitalDoctorListContainer}>
       <h1 className={styles.hospitalDoctorListTitle}>
-        Find Doctors at {hospitalName}, {location}
+        {hospitalName} doctor list, {location}
       </h1>
       <p className={styles.hospitalDoctorListIntro}>
         {hospitalName} in {location} is known for service excellence and a wide range of specialties. Below is the list of doctors, their degrees, specialties, visiting hours, and contact numbers for appointments.
       </p>
       <h2 className={styles.hospitalDoctorListH2}>
-        Doctor List at {hospitalName}, {location}
+        Best available Doctor List at {hospitalName}, {location}
       </h2>
       <ul className={styles.doctorCardGrid}>
         {doctors.map(doctor => (
@@ -95,7 +96,7 @@ export default async function HospitalDoctorListPage({ params }: Props) {
               <div className={styles.doctorDegree}>{doctor.Degree}</div>
               <div className={styles.doctorVisiting}><span className={styles.visitingIcon}>⏰</span> {doctor["Visiting Hours"]}</div>
               <div className={styles.doctorAppointment}><span className={styles.phoneIcon}>📞</span> <a href={`tel:${doctor["Appointment Number"]}`}>{doctor["Appointment Number"]}</a></div>
-              <Link href={`/${encodeURIComponent(doctor["Doctor Name"])}`} className={styles.doctorProfileLink}>View Full Profile ➝</Link>
+              <Link href={`/${doctor.Slug}`} className={styles.doctorProfileLink}>View Full Profile ➝</Link>
             </div>
           </li>
         ))}

@@ -9,12 +9,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const db = client.db(process.env.MONGODB_DB_NAME);
   const doctors = await db.collection('doctor_info')
     .find({})
-    .project({ "Doctor Name": 1, "Last Modified": 1 })
+    .project({ Slug: 1, "Last Modified": 1 })
     .toArray();
 
   // Create doctor profile URLs
   const doctorUrls = doctors.map((doctor) => ({
-    url: `${baseUrl}/${encodeURIComponent(doctor["Doctor Name"])}`,
+    url: `${baseUrl}/${doctor.Slug}`,
     lastModified: doctor["Last Modified"] || new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8

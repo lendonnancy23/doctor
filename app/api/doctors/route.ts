@@ -92,6 +92,7 @@ export async function GET(req: NextRequest) {
         .sort(sort)
         .skip(skip)
         .limit(pageSize)
+        .project({ Slug: 1, "Doctor Name": 1, "Photo URL": 1, Degree: 1, Speciality: 1, Designation: 1, Workplace: 1, About: 1, "Hospital Name": 1, Address: 1, Location: 1, "Visiting Hours": 1, "Appointment Number": 1 })
         .toArray(),
       db.collection('doctor_info')
         .countDocuments(query)

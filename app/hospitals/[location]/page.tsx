@@ -70,7 +70,7 @@ export default async function LocationHospitalsPage({ params }: Props) {
                       <div className={styles.doctorSpecialty}>Specialty: {doc.Speciality}</div>
                       <div className={styles.doctorVisiting}>Visiting: {doc["Visiting Hours"]}</div>
                       <div className={styles.doctorAppointment}>Appointment: <a href={`tel:${doc["Appointment Number"]}`}>{doc["Appointment Number"]}</a></div>
-                      <Link href={`/${encodeURIComponent(doc["Doctor Name"])}`} className={styles.doctorProfileLink}>View Profile ➝</Link>
+                      <Link href={`/${doc.Slug}`} className={styles.doctorProfileLink}>View Profile ➝</Link>
                     </div>
                   ))}
                 </div>

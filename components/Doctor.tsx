@@ -21,6 +21,7 @@ interface DoctorProps {
     Location: string;
     "Visiting Hours": string;
     "Appointment Number": string;
+    Slug: string;
   };
   featured?: boolean;
 }
@@ -57,7 +58,7 @@ const Doctor: React.FC<DoctorProps> = ({ doctor, featured = false }) => {
 
   return (
     <Link 
-      href={`/${encodeURIComponent(doctor["Doctor Name"])}`}
+      href={`/${doctor.Slug}`}
       className={styles.doctorContainer}
     >
       <div className={styles.doctorHeader}>

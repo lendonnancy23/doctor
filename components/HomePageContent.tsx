@@ -32,6 +32,7 @@ interface Doctor {
   Location: string;
   "Visiting Hours": string;
   "Appointment Number": string;
+  Slug: string;
 }
 
 export default function HomePageContent() {

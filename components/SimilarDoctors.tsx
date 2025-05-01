@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PlaceholderImage from './PlaceholderImage';
-import { formatDoctorNameForUrl } from '@/lib/utils';
 import styles from './SimilarDoctors.module.css';
 
 interface Doctor {
@@ -15,6 +14,7 @@ interface Doctor {
   Designation: string;
   "Hospital Name": string;
   Location: string;
+  Slug: string;
 }
 
 interface SimilarDoctorsProps {
@@ -94,7 +94,7 @@ const SimilarDoctors: React.FC<SimilarDoctorsProps> = ({ currentDoctorName, spec
       <div className={styles.doctorGrid}>
         {doctors.map((doctor) => (
           <Link
-            href={`/${encodeURIComponent(doctor["Doctor Name"])}`}
+            href={`/${doctor.Slug}`}
             key={doctor["Doctor Name"]}
             className={styles.doctorCard}
           >
