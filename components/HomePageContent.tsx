@@ -1,23 +1,18 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import styles from '../app/HomePage.module.css';
 import Loading from './Loading';
 import HeroSection from './HeroSection';
 import dynamic from 'next/dynamic';
-import { useInView } from 'react-intersection-observer';
-import type { SearchFilters } from './SearchBar';
 import SchemaOrg from './SchemaOrg';
-import Link from 'next/link';
-import { slugify } from '@/lib/utils';
+import Head from 'next/head';
 
 const Doctor = dynamic(() => import('./Doctor'), {
   loading: () => <Loading />,
   ssr: true
 });
-
-const DOTS = '...';
 
 interface Doctor {
   "Doctor Name": string;
@@ -37,21 +32,24 @@ interface Doctor {
 
 export default function HomePageContent() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [displayedDoctors, setDisplayedDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(1);
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
   const [hospitals, setHospitals] = useState<string[]>([]);
+  const [filters, setFilters] = useState({
+    name: '',
+    speciality: '',
+    location: '',
+    hospital: '',
+    sortBy: undefined as string | undefined
+  });
+  const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
-  const { ref, inView } = useInView();
-  const chunkSize = 6;
 
+  // Determine current page
   const currentPage = parseInt(searchParams.get('page') || '1');
-  const pageSize = 24;
 
   // Fetch filter options on mount
   useEffect(() => {
@@ -65,105 +63,60 @@ export default function HomePageContent() {
         setLocations(locationsData.locations || []);
         setHospitals(hospitalsData.hospitals || []);
       })
-      .catch(err => console.error('Error fetching filter options:', err));
+      .catch(() => {});
   }, []);
 
-  const fetchDoctors = useCallback(async (filters: SearchFilters) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const queryParams = new URLSearchParams({
-        page: currentPage.toString(),
-        pageSize: pageSize.toString(),
-        ...(filters.name && { name: filters.name }),
-        ...(filters.speciality && { speciality: filters.speciality }),
-        ...(filters.location && { location: filters.location }),
-        ...(filters.hospital && { hospital: filters.hospital }),
-        ...(filters.sortBy && { sortBy: filters.sortBy })
-      });
-
-      const response = await fetch(`/api/doctors?${queryParams}`, {
-        next: { revalidate: 60 }, // Cache for 60 seconds
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to fetch doctors');
-      }
-
-      const data = await response.json();
-      setDoctors(data.doctors || []);
-      setDisplayedDoctors(data.doctors?.slice(0, chunkSize) || []);
-      setTotalPages(data.totalPages || 1);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchDoctors({
-      name: '',
-      speciality: searchParams.get('speciality') || '',
-      location: searchParams.get('location') || '',
-      hospital: searchParams.get('hospital') || '',
-      sortBy: searchParams.get('sortBy') || 'name'
+  // Fetch doctors with filters
+  const fetchDoctors = (newFilters: typeof filters) => {
+    setLoading(true);
+    setFilters(newFilters);
+    const params = new URLSearchParams({
+      page: (parseInt(searchParams.get('page') || '1')).toString(),
+      pageSize: (parseInt(searchParams.get('page') || '1') === 1 ? '8' : '24'),
+      ...(newFilters.name && { name: newFilters.name }),
+      ...(newFilters.speciality && { speciality: newFilters.speciality }),
+      ...(newFilters.location && { location: newFilters.location }),
+      ...(newFilters.hospital && { hospital: newFilters.hospital }),
+      sortBy: newFilters.sortBy || 'name'
     });
-  }, [fetchDoctors, searchParams]);
+    fetch(`/api/doctors?${params}`)
+      .then(res => res.json())
+      .then(data => {
+        setDoctors(data.doctors || []);
+        setTotalPages(data.totalPages || 1);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  };
 
-  // Load more doctors when scrolling
+  // Fetch doctors on mount and when page/filters change
   useEffect(() => {
-    if (inView && displayedDoctors.length < doctors.length) {
-      const nextChunk = doctors.slice(
-        displayedDoctors.length,
-        displayedDoctors.length + chunkSize
-      );
-      setDisplayedDoctors(prev => [...prev, ...nextChunk]);
-    }
-  }, [inView, doctors, displayedDoctors.length]);
+    fetchDoctors(filters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get('page')]);
 
   const handlePageChange = (newPage: number) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set('page', newPage.toString());
-    setDisplayedDoctors([]); // Reset displayed doctors for new page
-    window.history.pushState(null, '', `${pathname}?${current.toString()}`);
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    router.push(`${pathname}?${current.toString()}`);
   };
-
-  const handleDoctorClick = (doctorName: string) => {
-    router.push(`/doctors/${encodeURIComponent(doctorName)}`);
-  };
-
-  if (error) {
-    return (
-      <div className={styles.errorContainer}>
-        <h2>Error</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
 
   const renderPaginationButtons = () => {
     const siblingCount = 1;
+    const DOTS = '...';
     const totalPageNumbers = siblingCount * 2 + 3;
     const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
     const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
-
     const shouldShowLeftDots = leftSiblingIndex > 2;
     const shouldShowRightDots = rightSiblingIndex < totalPages - 1;
-
     if (totalPages <= totalPageNumbers) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
-
     if (!shouldShowLeftDots && shouldShowRightDots) {
       const leftItemCount = 3 + 2 * siblingCount;
       const leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
       return [...leftRange, DOTS, totalPages];
     }
-
     if (shouldShowLeftDots && !shouldShowRightDots) {
       const rightItemCount = 3 + 2 * siblingCount;
       const rightRange = Array.from(
@@ -172,7 +125,6 @@ export default function HomePageContent() {
       );
       return [1, DOTS, ...rightRange];
     }
-
     if (shouldShowLeftDots && shouldShowRightDots) {
       const middleRange = Array.from(
         { length: rightSiblingIndex - leftSiblingIndex + 1 },
@@ -182,134 +134,77 @@ export default function HomePageContent() {
     }
   };
 
-  // Filter options for search
-  const filterOptions = {
-    specialties,
-    locations,
-    hospitals,
-    sortOptions: [
-      { value: 'name', label: 'Name (A-Z)' },
-      { value: 'rating', label: 'Rating' },
-      { value: 'experience', label: 'Experience' }
-    ]
-  };
-
-  // Add a section for quick specialty/location navigation
-  const [specialtyLinks, setSpecialtyLinks] = useState<{ location: string, speciality: string, slugifiedSpeciality: string, count: number }[]>([]);
-  useEffect(() => {
-    // Fetch only valid (location, Speciality) pairs from the backend
-    fetch('/api/doctors?uniqueLocationSpecialityPairs=true')
-      .then(res => res.json())
-      .then(data => {
-        setSpecialtyLinks(data.pairs || []);
-      });
-  }, []);
-
   return (
     <>
-      <SchemaOrg doctors={displayedDoctors} />
+      <Head>
+        <title>Find Top Doctors in Bangladesh | Book Appointments Online</title>
+        <meta name="description" content="Find and book appointments with the best doctors in Bangladesh. Search by location, hospital, and more. Trusted doctor reviews and easy online booking." />
+      </Head>
+      <SchemaOrg doctors={doctors} />
       <main>
-        <h1 className="sr-only">Find and Book Doctor Appointments in Bangladesh</h1>
-        
-        <HeroSection 
+        <h1 className={styles.mainHeading}>Find and Book Doctor Appointments in Bangladesh</h1>
+        <HeroSection
           onSearch={fetchDoctors}
           specialties={specialties}
+          locations={locations}
+          hospitals={hospitals}
           loading={loading}
         />
-        
-        <div className={styles.container}>
-          {loading && displayedDoctors.length === 0 ? (
-            <Loading />
-          ) : error ? (
-            <div className={styles.errorContainer}>
-              <h2>Error</h2>
-              <p>{error}</p>
-            </div>
-          ) : (
-            <>
-              <section aria-label="Doctor Listings">
-                <div className={styles.doctorsGrid}>
-                  {displayedDoctors.map((doctor, index) => (
-                    <Suspense key={doctor["Doctor Name"]} fallback={<Loading />}>
-                      <article>
-                        <Doctor
-                          doctor={doctor}
-                          featured={currentPage === 1 && index < 3}
-                        />
-                      </article>
-                    </Suspense>
-                  ))}
-                </div>
-
-                {displayedDoctors.length < doctors.length && (
-                  <div ref={ref} className={styles.loadingMore}>
-                    <Loading />
-                  </div>
-                )}
-
-                {/* Pagination navigation */}
-                {totalPages > 1 && (
-                  <nav aria-label="Pagination" className={styles.pagination}>
-                    <button
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className={styles.pageButton}
-                      aria-label="Go to previous page"
-                    >
-                      Previous
-                    </button>
-                    
-                    {renderPaginationButtons()?.map((pageNum, i) => (
-                      <button
-                        key={i}
-                        onClick={() => pageNum !== DOTS && handlePageChange(Number(pageNum))}
-                        className={`${styles.pageButton} ${
-                          pageNum === DOTS ? styles.dots : ''
-                        } ${currentPage === pageNum ? styles.activePage : ''}`}
-                        disabled={pageNum === DOTS}
-                        aria-current={currentPage === pageNum ? 'page' : undefined}
-                        aria-label={pageNum === DOTS ? 'More pages' : `Go to page ${pageNum}`}
-                      >
-                        {pageNum}
-                      </button>
-                    ))}
-
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className={styles.pageButton}
-                      aria-label="Go to next page"
-                    >
-                      Next
-                    </button>
-                  </nav>
-                )}
-              </section>
-
-              {/* No results message */}
-              {displayedDoctors.length === 0 && !loading && (
-                <div className={styles.noResults} role="alert">
-                  <h2>No doctors found</h2>
-                  <p>Try adjusting your search filters or try a different location.</p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <section className={styles.quickSpecialtyNavSection}>
-          <h2 className={styles.quickSpecialtyNavTitle}>Find Top Doctors by Specialty & Location</h2>
-          <div className={styles.quickSpecialtyNavGrid}>
-            {specialtyLinks.filter(link => link.count > 0).map(({ location, speciality, slugifiedSpeciality, count }) => (
-              <Link
-                key={`${location}-${speciality}`}
-                href={`/specialists/${encodeURIComponent(location)}/${slugifiedSpeciality}`}
-                className={styles.quickSpecialtyNavLink}
-              >
-                Best {speciality} in {location} ({count})
-              </Link>
-            ))}
+        <section aria-label="Featured Doctors" className={styles.doctorsSection}>
+          <h2 className={styles.sectionTitle}>Top Doctors</h2>
+          <div className={styles.doctorCardGrid}>
+            {loading ? (
+              <Loading />
+            ) : doctors.length === 0 ? (
+              <div className={styles.noResults} role="alert">
+                <h2>No doctors found</h2>
+                <p>Try adjusting your search filters or try a different location.</p>
+              </div>
+            ) : (
+              doctors.map((doctor) => (
+                <Suspense key={doctor["Doctor Name"]} fallback={<Loading />}>
+                  <article className={styles.doctorCard}>
+                    <Doctor doctor={doctor} />
+                  </article>
+                </Suspense>
+              ))
+            )}
           </div>
+          {/* Pagination navigation */}
+          {totalPages > 1 && (
+            <nav aria-label="Pagination" className={styles.pagination}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={styles.pageButton}
+                aria-label="Go to previous page"
+              >
+                Previous
+              </button>
+              {renderPaginationButtons()?.map((pageNum, i) => (
+                <button
+                  key={i}
+                  onClick={() => pageNum !== '...' && handlePageChange(Number(pageNum))}
+                  className={`${styles.pageButton} ${
+                    pageNum === '...' ? styles.dots : ''
+                  } ${currentPage === pageNum ? styles.activePage : ''}`}
+                  disabled={pageNum === '...'}
+                  aria-current={currentPage === pageNum ? 'page' : undefined}
+                  aria-label={pageNum === '...' ? 'More pages' : `Go to page ${pageNum}`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={styles.pageButton}
+                aria-label="Go to next page"
+              >
+                Next
+              </button>
+            </nav>
+          )}
         </section>
       </main>
     </>

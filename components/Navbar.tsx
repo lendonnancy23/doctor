@@ -14,6 +14,9 @@ export default function Navbar() {
   const [hospitalsByLocation, setHospitalsByLocation] = useState<Record<string, string[]>>({});
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [showHospitals, setShowHospitals] = useState(false);
+  const [specialitiesByLocation, setSpecialitiesByLocation] = useState<Record<string, string[]>>({});
+  const [showSpecialities, setShowSpecialities] = useState(false);
+  const [selectedSpecialityLocation, setSelectedSpecialityLocation] = useState<string | null>(null);
 
   // Fetch locations and hospitals
   useEffect(() => {
@@ -40,6 +43,26 @@ export default function Navbar() {
   const handleHospitalsMouseLeave = () => {
     setShowHospitals(false);
     setSelectedLocation(null);
+  };
+
+  // Fetch specialities for a location
+  const fetchSpecialitiesForLocation = async (location: string) => {
+    if (!specialitiesByLocation[location]) {
+      const res = await fetch(`/api/doctors?specialties=true&location=${encodeURIComponent(location)}`);
+      const data = await res.json();
+      setSpecialitiesByLocation(prev => ({ ...prev, [location]: (data.specialties || []).filter(Boolean) }));
+    }
+  };
+
+  const handleSpecialityLocationClick = async (location: string) => {
+    setSelectedSpecialityLocation(location);
+    await fetchSpecialitiesForLocation(location);
+    setShowSpecialities(true);
+  };
+
+  const handleSpecialitiesMouseLeave = () => {
+    setShowSpecialities(false);
+    setSelectedSpecialityLocation(null);
   };
 
   // Close menu when route changes
@@ -165,6 +188,43 @@ export default function Navbar() {
                           className={styles.submenuItem}
                         >
                           {hospital}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div
+            className={styles.dropdown}
+            onMouseLeave={handleSpecialitiesMouseLeave}
+          >
+            <button
+              className={styles.dropdownButton}
+              aria-haspopup="true"
+              aria-expanded={showSpecialities}
+            >
+              Specialities
+            </button>
+            <div className={styles.dropdownMenu}>
+              {locations.map(location => (
+                <div
+                  key={location}
+                  className={styles.dropdownItem}
+                  onMouseEnter={() => handleSpecialityLocationClick(location)}
+                  onClick={() => handleSpecialityLocationClick(location)}
+                >
+                  <span>{location}</span>
+                  {selectedSpecialityLocation === location && showSpecialities && specialitiesByLocation[location] && (
+                    <div className={styles.submenu}>
+                      {specialitiesByLocation[location].map(speciality => (
+                        <Link
+                          key={speciality}
+                          href={`/specialists/${encodeURIComponent(location)}/${speciality.replace(/\s+/g, '-').toLowerCase()}`}
+                          className={styles.submenuItem}
+                        >
+                          {speciality}
                         </Link>
                       ))}
                     </div>

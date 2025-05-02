@@ -31,8 +31,15 @@ export async function GET(req: NextRequest) {
 
     // Handle metadata-only requests
     if (searchParams.get('specialties')) {
-      const specialties = await db.collection('doctor_info')
-        .distinct('Speciality');
+      const location = searchParams.get('location');
+      let specialties;
+      if (location) {
+        specialties = await db.collection('doctor_info')
+          .distinct('Speciality', { Location: location });
+      } else {
+        specialties = await db.collection('doctor_info')
+          .distinct('Speciality');
+      }
       return NextResponse.json({ specialties }, {
         headers: corsHeaders
       });
