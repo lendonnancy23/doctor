@@ -14,11 +14,8 @@ export default function Navbar() {
   const [hospitalsByLocation, setHospitalsByLocation] = useState<Record<string, string[]>>({});
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [showHospitals, setShowHospitals] = useState(false);
-  const [specialitiesByLocation, setSpecialitiesByLocation] = useState<Record<string, string[]>>({});
-  const [showSpecialities, setShowSpecialities] = useState(false);
-  const [selectedSpecialityLocation, setSelectedSpecialityLocation] = useState<string | null>(null);
 
-  // Fetch locations and hospitals
+  // Fetch locations on mount
   useEffect(() => {
     fetch('/api/doctors?locations=true')
       .then(res => res.json())
@@ -45,69 +42,16 @@ export default function Navbar() {
     setSelectedLocation(null);
   };
 
-  // Fetch specialities for a location
-  const fetchSpecialitiesForLocation = async (location: string) => {
-    if (!specialitiesByLocation[location]) {
-      const res = await fetch(`/api/doctors?specialties=true&location=${encodeURIComponent(location)}`);
-      const data = await res.json();
-      setSpecialitiesByLocation(prev => ({ ...prev, [location]: (data.specialties || []).filter(Boolean) }));
-    }
-  };
-
-  const handleSpecialityLocationClick = async (location: string) => {
-    setSelectedSpecialityLocation(location);
-    await fetchSpecialitiesForLocation(location);
-    setShowSpecialities(true);
-  };
-
-  const handleSpecialitiesMouseLeave = () => {
-    setShowSpecialities(false);
-    setSelectedSpecialityLocation(null);
-  };
-
-  // Close menu when route changes
+  // Effect hooks for menu management
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Handle scroll events
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const nav = document.querySelector(`.${styles.navLinks}`);
-      const button = document.querySelector(`.${styles.menuButton}`);
-      
-      if (isMenuOpen && nav && button && 
-          !nav.contains(event.target as Node) && 
-          !button.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isMenuOpen]);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isMenuOpen]);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen(!isMenuOpen);
@@ -135,34 +79,22 @@ export default function Navbar() {
           className={`${styles.navLinks} ${isMenuOpen ? styles.active : ''}`}
           aria-hidden={!isMenuOpen}
         >
-          <Link 
-            href="/about" 
-            className={pathname === '/about' ? styles.active : ''}
-          >
+          <Link href="/about" className={pathname === '/about' ? styles.active : ''}>
             About Us
           </Link>
-          <Link 
-            href="/contact" 
-            className={pathname === '/contact' ? styles.active : ''}
-          >
+          <Link href="/contact" className={pathname === '/contact' ? styles.active : ''}>
             Contact
           </Link>
-          <Link
-            href="/"
-            className={`${styles.findButton} ${pathname === '/' ? styles.active : ''}`}
-          >
+          <Link href="/" className={`${styles.findButton} ${pathname === '/' ? styles.active : ''}`}>
             <FaSearch className={styles.searchIcon} />
             Find a Doctor
           </Link>
-          
           <Link href="/contact" className={styles.appointmentButton}>
             <FaUserMd className={styles.doctorIcon} />
             List Your Practice
           </Link>
-          <div
-            className={styles.dropdown}
-            onMouseLeave={handleHospitalsMouseLeave}
-          >
+
+          <div className={styles.dropdown} onMouseLeave={handleHospitalsMouseLeave}>
             <button
               className={styles.dropdownButton}
               aria-haspopup="true"
@@ -176,7 +108,6 @@ export default function Navbar() {
                   key={location}
                   className={styles.dropdownItem}
                   onMouseEnter={() => handleLocationClick(location)}
-                  onClick={() => handleLocationClick(location)}
                 >
                   <Link href={`/hospitals/${encodeURIComponent(location)}`}>{location}</Link>
                   {selectedLocation === location && showHospitals && hospitalsByLocation[location] && (
@@ -188,43 +119,6 @@ export default function Navbar() {
                           className={styles.submenuItem}
                         >
                           {hospital}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div
-            className={styles.dropdown}
-            onMouseLeave={handleSpecialitiesMouseLeave}
-          >
-            <button
-              className={styles.dropdownButton}
-              aria-haspopup="true"
-              aria-expanded={showSpecialities}
-            >
-              Specialities
-            </button>
-            <div className={styles.dropdownMenu}>
-              {locations.map(location => (
-                <div
-                  key={location}
-                  className={styles.dropdownItem}
-                  onMouseEnter={() => handleSpecialityLocationClick(location)}
-                  onClick={() => handleSpecialityLocationClick(location)}
-                >
-                  <span>{location}</span>
-                  {selectedSpecialityLocation === location && showSpecialities && specialitiesByLocation[location] && (
-                    <div className={styles.submenu}>
-                      {specialitiesByLocation[location].map(speciality => (
-                        <Link
-                          key={speciality}
-                          href={`/specialists/${encodeURIComponent(location)}/${speciality.replace(/\s+/g, '-').toLowerCase()}`}
-                          className={styles.submenuItem}
-                        >
-                          {speciality}
                         </Link>
                       ))}
                     </div>

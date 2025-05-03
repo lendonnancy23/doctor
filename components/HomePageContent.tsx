@@ -8,6 +8,7 @@ import HeroSection from './HeroSection';
 import dynamic from 'next/dynamic';
 import SchemaOrg from './SchemaOrg';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const Doctor = dynamic(() => import('./Doctor'), {
   loading: () => <Loading />,
@@ -30,6 +31,21 @@ interface Doctor {
   Slug: string;
 }
 
+interface SearchFilters {
+  name: string;
+  speciality: string;
+  location: string;
+  hospital: string;
+  sortBy?: string;
+}
+
+interface SpecialtyPair {
+  location: string;
+  speciality: string;
+  slugifiedSpeciality: string;
+  count: number;
+}
+
 export default function HomePageContent() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,13 +53,17 @@ export default function HomePageContent() {
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
   const [hospitals, setHospitals] = useState<string[]>([]);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<SearchFilters>({
     name: '',
     speciality: '',
     location: '',
     hospital: '',
-    sortBy: undefined as string | undefined
+    sortBy: undefined
   });
+  const [popularSpecialties, setPopularSpecialties] = useState<Array<{name: string; location: string; count: number}>>([]);
+  const [selectedLocation, setSelectedLocation] = useState('Dhaka');
+  const [specialtyLoading, setSpecialtyLoading] = useState(true);
+  const [specialtyError, setSpecialtyError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -66,8 +86,40 @@ export default function HomePageContent() {
       .catch(() => {});
   }, []);
 
+  // Fetch specialty data when location changes
+  useEffect(() => {
+    const fetchSpecialtyData = async () => {
+      setSpecialtyLoading(true);
+      setSpecialtyError(null);
+      try {
+        const response = await fetch('/api/doctors?uniqueLocationSpecialityPairs=true');
+        if (!response.ok) {
+          throw new Error('Failed to fetch specialty data');
+        }
+        const data = await response.json();
+        const pairs: SpecialtyPair[] = data.pairs || [];
+        const locationSpecialties = pairs
+          .filter((pair: SpecialtyPair) => pair.location === selectedLocation)
+          .sort((a: SpecialtyPair, b: SpecialtyPair) => b.count - a.count)
+          .slice(0, 10)
+          .map((pair: SpecialtyPair) => ({
+            name: pair.speciality,
+            location: pair.location,
+            count: pair.count
+          }));
+        setPopularSpecialties(locationSpecialties);
+      } catch (error) {
+        setSpecialtyError(error instanceof Error ? error.message : 'Failed to load specialties');
+      } finally {
+        setSpecialtyLoading(false);
+      }
+    };
+
+    fetchSpecialtyData();
+  }, [selectedLocation]);
+
   // Fetch doctors with filters
-  const fetchDoctors = (newFilters: typeof filters) => {
+  const fetchDoctors = (newFilters: SearchFilters) => {
     setLoading(true);
     setFilters(newFilters);
     const params = new URLSearchParams({
@@ -99,6 +151,10 @@ export default function HomePageContent() {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set('page', newPage.toString());
     router.push(`${pathname}?${current.toString()}`);
+  };
+
+  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedLocation(event.target.value);
   };
 
   const renderPaginationButtons = () => {
@@ -150,6 +206,63 @@ export default function HomePageContent() {
           hospitals={hospitals}
           loading={loading}
         />
+
+        {/* Quick Specialty Navigation Section */}
+        <section className={styles.quickSpecialtyNavSection}>
+          <div className={styles.quickSpecialtyNavHeader}>
+            <h2 className={styles.quickSpecialtyNavTitle}>
+              Popular Medical Specialties
+            </h2>
+            <div className={styles.locationSelector}>
+              <select 
+                value={selectedLocation}
+                onChange={handleLocationChange}
+                className={styles.locationSelect}
+              >
+                {locations.map(location => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {specialtyLoading ? (
+            <div className={styles.quickSpecialtyNavGrid}>
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className={styles.specialtyLoadingCard}>
+                  Loading...
+                </div>
+              ))}
+            </div>
+          ) : specialtyError ? (
+            <div className={styles.specialtyError}>
+              <h3>Error Loading Specialties</h3>
+              <p>{specialtyError}</p>
+              <button 
+                onClick={() => setSelectedLocation(selectedLocation)} 
+                className={styles.retryButton}
+              >
+                ↻ Retry
+              </button>
+            </div>
+          ) : (
+            <div className={styles.quickSpecialtyNavGrid}>
+              {popularSpecialties.map(({ name, location, count }) => (
+                <Link
+                  key={name}
+                  href={`/specialists/${encodeURIComponent(location)}/${name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className={styles.quickSpecialtyNavLink}
+                >
+                  <span>{name}</span>
+                  <span className={styles.specialtyCount}>{count}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+
         <section aria-label="Featured Doctors" className={styles.doctorsSection}>
           <h2 className={styles.sectionTitle}>Top Doctors</h2>
           <div className={styles.doctorCardGrid}>

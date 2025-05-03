@@ -8,10 +8,12 @@ import styles from './HeroSection.module.css';
 interface HeroSectionProps {
   onSearch: (filters: SearchFilters) => void;
   specialties: string[];
+  locations: string[];
+  hospitals: string[];
   loading?: boolean;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, specialties, loading }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, specialties, locations, hospitals, loading }) => {
   return (
     <div className={styles.heroSection}>
       <div className={styles.heroContent}>
@@ -36,6 +38,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, specialties, loadin
           <div className={styles.features}>
             <div className={styles.featureItem}>
               <FaCheck className={styles.checkIcon} />
+              <span>Verified Doctors</span>
+            </div>
+            <div className={styles.featureItem}>
+              <FaCheck className={styles.checkIcon} />
               <span>Regular Checkup</span>
             </div>
             <div className={styles.featureItem}>
@@ -55,21 +61,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, specialties, loadin
               priority
               className={styles.heroImage}
             />
-            <div className={styles.doctorCard}>
-              <div className={styles.doctorAvatar}>
-                <Image
-                  src="/placeholder-image.png"
-                  alt="Doctor Avatar"
-                  width={40}
-                  height={40}
-                />
-              </div>
-              <div className={styles.doctorInfo}>
-                <h4>John Doe</h4>
-                <p>MBBS, Cardiologist</p>
-              </div>
-              <button className={styles.bookNowBtn}>Book Now</button>
-            </div>
           </div>
         </div>
       </div>
