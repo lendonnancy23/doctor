@@ -40,7 +40,7 @@ body {
 
 main {
   min-height: calc(100vh - 140px);
-  padding: 2rem 1rem;
+  padding: calc(72px + 2rem) 1rem 2rem;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -54,6 +54,14 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  background: linear-gradient(to right, var(--gray-900), var(--gray-800));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-top: 1rem;
 }
 
 h2 {
@@ -97,6 +105,7 @@ button:disabled {
 @media (max-width: 768px) {
   h1 {
     font-size: 2rem;
+    padding-top: 0.75rem;
   }
   
   h2 {
@@ -105,5 +114,9 @@ button:disabled {
   
   h3 {
     font-size: 1.25rem;
+  }
+
+  main {
+    padding: calc(72px + 1.5rem) 1rem 1.5rem;
   }
 }

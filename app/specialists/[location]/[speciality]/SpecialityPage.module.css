@@ -1,0 +1,290 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: calc(72px + 2rem) 1rem 4rem 1rem;
+}
+
+.pageHeader {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(to right, #0ea5e9, #6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pageDescription {
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mainSection {
+  margin-bottom: 4rem;
+}
+
+.sectionSubtitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.sectionText {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.doctorCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.doctorCard {
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+
+.doctorCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(14,165,233,0.12);
+  border-color: #818cf8;
+}
+
+.doctorCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.doctorCardHeader {
+  margin-bottom: 0.5rem;
+}
+
+.doctorName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  margin-bottom: 0.5rem;
+}
+
+.doctorSpecialty {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.doctorDegree {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.hospitalName {
+  color: #334155;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.doctorContact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.doctorLocation, .visitingHours, .appointmentNumber {
+  color: #64748b;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infoSection {
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.infoContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faqSection {
+  margin-bottom: 4rem;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.faqCard {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.faqQuestion {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0ea5e9;
+  margin-bottom: 1rem;
+}
+
+.faqAnswer {
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.relatedSection {
+  background: #f0f9ff;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+}
+
+.relatedLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.relatedLink {
+  background: #fff;
+  color: #0ea5e9;
+  padding: 0.75rem 1.25rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.relatedLink:hover {
+  background: #0ea5e9;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.errorContainer {
+  max-width: 600px;
+  margin: 4rem auto;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: #fee2e2;
+  border-radius: 1rem;
+  border: 1px solid #fecaca;
+}
+
+.errorContainer h1 {
+  color: #991b1b;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.errorContainer p {
+  color: #ef4444;
+  margin-bottom: 1.5rem;
+}
+
+.backButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #0ea5e9;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: calc(72px + 1rem) 1rem 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+  }
+
+  .pageDescription {
+    font-size: 1rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1.5rem;
+  }
+
+  .doctorCardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .doctorCard {
+    padding: 1.25rem;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .infoSection, .relatedSection {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1.25rem;
+  }
+
+  .doctorCard {
+    padding: 1rem;
+  }
+
+  .doctorName {
+    font-size: 1.1rem;
+  }
+
+  .relatedLink {
+    width: 100%;
+    text-align: center;
+  }
+}
