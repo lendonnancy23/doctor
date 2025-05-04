@@ -85,9 +85,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  // Hospital pages
+  const hospitalPages = [];
+  // Get all unique hospitals and their locations
+  const hospitalData = await db.collection('doctor_info').aggregate([
+    {
+      $group: {
+        _id: {
+          hospital: '$Hospital Name',
+          location: '$Location'
+        },
+        lastModified: { $max: '$Last Modified' }
+      }
+    }
+  ]).toArray();
+
+  // Add hospital location pages
+  const uniqueLocations = new Set(hospitalData.map(item => item._id.location));
+  for (const location of uniqueLocations) {
+    hospitalPages.push({
+      url: escapeXml(`${baseUrl}/hospitals/${encodeURIComponent(location)}`),
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7
+    });
+  }
+
+  // Add individual hospital pages
+  for (const data of hospitalData) {
+    const hospitalSlug = data._id.hospital.toLowerCase().replace(/\s+/g, '-');
+    hospitalPages.push({
+      url: escapeXml(`${baseUrl}/hospitals/${encodeURIComponent(data._id.location)}/${encodeURIComponent(hospitalSlug)}`),
+      lastModified: data.lastModified || new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7
+    });
+  }
+
   return [
     ...staticPages,
     ...doctorUrls,
-    ...specialtyPages
+    ...specialtyPages,
+    ...hospitalPages
   ];
 }
