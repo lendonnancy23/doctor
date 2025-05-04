@@ -9,16 +9,29 @@ const options = {
   maxPoolSize: 10,
   minPoolSize: 0,
   retryWrites: true,
-  w: 1, // Changed from '1' (string) to 1 (number)
+  w: 1,
   monitorCommands: true,
+  connectTimeoutMS: 5000, // 5 second timeout
+  socketTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 5000,
 }
 
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
 
-if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+// For Edge Runtime - simplified connection handling
+if (process.env.NEXT_RUNTIME === 'edge') {
+  client = new MongoClient(uri, {
+    ...options,
+    maxPoolSize: 1, // Reduce pool size for edge
+    minPoolSize: 0
+  });
+  clientPromise = client.connect()
+    .catch(error => {
+      console.error('Edge MongoDB connection error:', error)
+      throw new Error('Database connection failed in edge runtime.')
+    });
+} else if (process.env.NODE_ENV === 'development') {
   let globalWithMongo = global as typeof globalThis & {
     _mongoClientPromise?: Promise<MongoClient>
   }
@@ -26,6 +39,15 @@ if (process.env.NODE_ENV === 'development') {
   if (!globalWithMongo._mongoClientPromise) {
     client = new MongoClient(uri, options)
     globalWithMongo._mongoClientPromise = client.connect()
+      .then(client => {
+        client.on('timeout', () => {
+          console.error('MongoDB operation timeout')
+        })
+        client.on('error', (error) => {
+          console.error('MongoDB connection error:', error)
+        })
+        return client
+      })
       .catch(error => {
         console.error('MongoDB connection error:', error)
         throw new Error('Failed to connect to MongoDB. Please check your connection.')
@@ -33,16 +55,21 @@ if (process.env.NODE_ENV === 'development') {
   }
   clientPromise = globalWithMongo._mongoClientPromise
 } else {
-  // In production mode, it's best to not use a global variable.
   client = new MongoClient(uri, options)
   clientPromise = client.connect()
+    .then(client => {
+      client.on('timeout', () => {
+        console.error('MongoDB operation timeout')
+      })
+      client.on('error', (error) => {
+        console.error('MongoDB connection error:', error)
+      })
+      return client
+    })
     .catch(error => {
       console.error('MongoDB connection error:', error)
-      // Log to your error tracking service here
       throw new Error('Database connection failed. Our team has been notified.')
     })
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
 export { clientPromise }
