@@ -1,6 +1,20 @@
 import { MetadataRoute } from 'next';
 import { clientPromise } from '@/lib/mongodb';
 
+// Function to escape XML special characters
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[&<>"']/g, (match) => {
+    switch (match) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case "'": return '&apos;';
+      default: return match;
+    }
+  });
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://topdoctorlist.com';
 
@@ -14,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Create doctor profile URLs
   const doctorUrls = doctors.map((doctor) => ({
-    url: `${baseUrl}/${doctor.Slug}`,
+    url: escapeXml(`${baseUrl}/${doctor.Slug}`),
     lastModified: doctor["Last Modified"] || new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8
@@ -63,7 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const specialty of specialties) {
       const slug = specialty.toLowerCase().replace(/\s+/g, '-');
       specialtyPages.push({
-        url: `${baseUrl}/specialists/${encodeURIComponent(location)}/best-${slug}`,
+        url: escapeXml(`${baseUrl}/specialists/${encodeURIComponent(location)}/best-${slug}`),
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.7
